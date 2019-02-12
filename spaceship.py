@@ -22,6 +22,12 @@ class Spaceship:
 
 
 	def animation(self, screen, counter, fps):
+		"""
+		Affiche le vaisseau du l'ecran
+
+		Entree: Ecran, compteur de boucle, fps
+		Sortie: Compteur de boucle
+		"""
 		fps = fps if fps != 0 else 0.1
 		if counter/fps < 0.3:
 			screen.blit(self.list_pictures[0], (0,0))
@@ -29,10 +35,11 @@ class Spaceship:
 		elif counter/fps < 0.6:
 			screen.blit(self.list_pictures[1], (0,0))
 
-		elif counter/fps < 1:
+		elif counter/fps <= 1:
 			screen.blit(self.list_pictures[2], (0,0))
 
 		else:
+			screen.blit(self.list_pictures[2], (0,0))
 			counter = 0
 
 		return counter
