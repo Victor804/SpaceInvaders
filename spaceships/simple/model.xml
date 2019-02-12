@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+ <spaceship>
+     <name>simple</name>
+     <life>1000</life>
+     <speed>10</speed>
+</spaceship>
