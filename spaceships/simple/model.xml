@@ -3,4 +3,5 @@
      <name>simple</name>
      <life>1000</life>
      <speed>10</speed>
+     <animationTime>1</animationTime>
 </spaceship>

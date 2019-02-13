@@ -20,7 +20,7 @@ while True:
 
     screen.blit(background, (0,0))
     screen.blit(render_fps,(0,0))
-    counter = spaceship.animation(screen, counter, round(clock.get_fps()), 1)
+    counter = spaceship.animation(screen, counter, round(clock.get_fps()))
 
     pygame.display.update()
     counter+=1
