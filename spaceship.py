@@ -10,10 +10,16 @@ class Spaceship:
 		self.pos = pos
 		self.life = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/life")[0].text)
 		self.speed = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/speed")[0].text)
+
 		self.animation_time = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/animationTime")[0].text)
+		self.animation_counter = 0
 		self.proportion_on_screen = 1/eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/proportionOnScreen")[0].text)
 		self.list_pictures = self.load_pictures()
 
+		self._events_registers()
+
+
+	def _events_registers(self):
 		eventd.register("screen size", self.load_pictures)
 
 	def load_pictures(self):
@@ -33,46 +39,28 @@ class Spaceship:
 
 	def move(self, x, y):
 		"""
-		Bouge le joueur
+		Bouge le joueur sans savoir si la position est valable
 
 		Entree: x, y bool
-		Sortie: True si peux bouger sinon False
 		"""
-		display = pygame.display.get_surface().get_rect()
-
 		self.pos = (self.pos[0]+speed*x, self.pos[1]+speed*y)
-		if not display.colliderect(self.list_pictures[0].get_rect()):#Verification que le joueur reste sur l'ecran
-			self.pos = (self.pos[0]-speed*x, self.pos[1]-speed*y)
-			return False
-
-		else:
-			return True
 
 
-	def animation(self, screen, counter, fps):
+	def animation(self, screen, fps):
 		"""
 		Affiche le vaisseau sur l'ecran en fonction de l'animation
 
 		Entree: Ecran, compteur de boucle, fps, duree de l'animation
 		Sortie: Compteur de boucle
 		"""
+		self.animation_counter+=1
 		fps = fps if fps != 0 else 0.1
-		if counter/fps >= self.animation_time:
+		if self.animation_counter/fps >= self.animation_time:
 			screen.blit(self.list_pictures[-1], self.pos)
-			counter = 0
+			self.animation_counter = 0
 
 		else:
 			for i in range(1, len(self.list_pictures)+1):
 				t = self.animation_time/len(self.list_pictures)
-				if t*(i-1) <= counter/fps and counter/fps < t*i:
+				if t*(i-1) <= self.animation_counter/fps and self.animation_counter/fps < t*i:
 					screen.blit(self.list_pictures[i-1], self.pos)
-
-		return counter
-
-
-if __name__ == "__main__":
-	spaceship = Spaceship("/simple")
-	print(spaceship.name)
-	print(spaceship.life)
-	print(spaceship.speed)
-	print(spaceship.list_pictures)

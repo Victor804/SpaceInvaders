@@ -17,8 +17,6 @@ screen.blit(pygame.transform.scale(background, size), (0,0))
 clock = pygame.time.Clock()
 pygame.display.flip()
 
-
-counter = 0
 while True:
     clock.tick(30)
     for event in pygame.event.get():
@@ -32,7 +30,6 @@ while True:
 
     screen.blit(pygame.transform.scale(background,size), (0,0))
     screen.blit(render_fps,(0,0))
-    counter = spaceship.animation(screen, counter, round(clock.get_fps()))
+    counter = spaceship.animation(screen, round(clock.get_fps()))
 
     pygame.display.update()
-    counter+=1
