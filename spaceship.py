@@ -1,25 +1,33 @@
 import pygame
 from lxml import etree
 import os, sys
+import eventd
 
 class Spaceship:
 	def __init__(self, directory, pos=(0, 0)):
+		self.directory = directory
 		self.name = etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/name")[0].text
-		self.pos = (0, 0)
+		self.pos = pos
 		self.life = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/life")[0].text)
 		self.speed = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/speed")[0].text)
 		self.animation_time = eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/animationTime")[0].text)
-		self.list_pictures = self._load_pictures(directory)
+		self.proportion_on_screen = 1/eval(etree.parse(sys.path[0]+"/spaceships"+directory+"/model.xml").xpath("/spaceship/proportionOnScreen")[0].text)
+		self.list_pictures = self.load_pictures()
 
+		eventd.register("screen size", self.load_pictures)
 
-	def _load_pictures(self, directory):
+	def load_pictures(self):
 		"""
 		Entree:	Dossier du vaisseau
 		Sortie: Liste des surfaces des images dans une liste
 		"""
 		list_pictures = list()
-		for file in os.listdir("./spaceships{}/animation".format(directory)):
-			list_pictures.append(pygame.image.load("./spaceships{}/animation/{}".format(directory, file)).convert_alpha())
+		for file in os.listdir("./spaceships{}/animation".format(self.directory)):
+			picture = pygame.image.load("./spaceships{}/animation/{}".format(self.directory, file)).convert_alpha()
+			size = (int(pygame.display.get_surface().get_size()[0]*self.proportion_on_screen), int(pygame.display.get_surface().get_size()[1]*self.proportion_on_screen))
+			picture = pygame.transform.scale(picture, size)
+			list_pictures.append(picture)
+		self.list_pictures = list_pictures
 		return list_pictures
 
 

@@ -4,4 +4,5 @@
      <life>1000</life>
      <speed>10</speed>
      <animationTime>1</animationTime>
+     <proportionOnScreen>8</proportionOnScreen><!--1/8-->
 </spaceship>
