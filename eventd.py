@@ -21,7 +21,7 @@ class EventManager(object):
             if event is None:
                 client()
             else:
-                client
+                client(event)
 
 
     def create_event_type(self, event_type):
