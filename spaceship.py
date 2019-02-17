@@ -23,7 +23,7 @@ class Spaceship:
 	def _events_registers(self):
 		eventd.register("screen size", self.load_pictures)
 		eventd.register("camera move", self.camera_move)
-
+		eventd.register("zoom", self.camera_zoom)
 
 	def load_pictures(self):
 		"""
@@ -50,9 +50,6 @@ class Spaceship:
 		self.pos = (self.pos[0]+self.speed*horizontal, self.pos[1]+self.speed*vertical)
 		self.pos_pictures = (self.pos_pictures[0]+self.speed*horizontal, self.pos_pictures[1]+self.speed*vertical)
 
-	def camera_move(self, pos):
-		self.pos_pictures = (self.pos_pictures[0]-pos[0], self.pos_pictures[1]-pos[1])
-
 
 	def animation(self, screen, fps):
 		"""
@@ -71,3 +68,12 @@ class Spaceship:
 				t = self.animation_time/len(self.list_pictures)
 				if t*(i-1) <= self.animation_counter/fps and self.animation_counter/fps < t*i:
 					screen.blit(self.list_pictures[i-1], self.pos_pictures)
+
+
+	def camera_move(self, pos):
+		self.pos_pictures = (self.pos_pictures[0]-pos[0], self.pos_pictures[1]-pos[1])
+
+	def camera_zoom(self, zoom):
+		self.speed*=zoom
+		self.proportion_on_screen*=zoom
+		self.load_pictures()

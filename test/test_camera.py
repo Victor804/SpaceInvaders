@@ -27,21 +27,26 @@ while True:
     clock.tick(60)
     for event in pygame.event.get():
         if event.type==QUIT: pygame.display.quit()
-        elif event.type==VIDEORESIZE:
+
+        if event.type==VIDEORESIZE:
             screen=pygame.display.set_mode(event.dict['size'],HWSURFACE|DOUBLEBUF|RESIZABLE)
             eventd.send_event("screen size")
 
-        elif event.type==KEYDOWN:
+        if event.type==KEYDOWN:
             if event.key==K_s:
                 camera.moveBy(0, 1)
-            elif event.key==K_z:
+            if event.key==K_z:
                 camera.moveBy(0, -1)
-            elif event.key==K_d:
+            if event.key==K_d:
                 camera.moveBy(1, 0)
-            elif event.key==K_q:
+            if event.key==K_q:
                 camera.moveBy(-1, 0)
-            print(pygame.key.get_pressed()[K_d])
+        if event.type==MOUSEBUTTONDOWN:
+            if event.button==4:
+                camera.zoom()
 
+            elif event.button==5:
+                camera.zoom(False)
 
     background.animation(screen, round(clock.get_fps()))
     spaceship.animation(screen, round(clock.get_fps()))

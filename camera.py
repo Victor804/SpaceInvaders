@@ -4,10 +4,11 @@ import eventd
 class Camera:
     def __init__(self, pos=(0,0)):
         self.pos = pos
-        self.zoom = 1
-        self.speed = 10
+        self.zoom_speed = 2
+        self.speed = 15
 
         eventd.create_event_type("camera move")
+        eventd.create_event_type("zoom")
 
     def moveTo(self, horizontal, vertical):
         """
@@ -27,5 +28,11 @@ class Camera:
         self.pos = (self.pos[0]+horizontal*self.speed, self.pos[-1]+vertical*self.speed)
         eventd.send_event("camera move", (horizontal*self.speed, self.speed*vertical))
 
-    def zoom(self):
-        pass
+    def zoom(self, direction=True):
+        """
+        Entree: direction(True, False)
+        """
+        if direction:
+            eventd.send_event("zoom", self.zoom_speed)
+        else:
+            eventd.send_event("zoom", 1/self.zoom_speed)
