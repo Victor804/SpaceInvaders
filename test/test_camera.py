@@ -1,3 +1,4 @@
+
 import pygame
 from pygame.locals import *
 import spaceship, background, camera
@@ -12,8 +13,8 @@ screen = pygame.display.set_mode(size, HWSURFACE|DOUBLEBUF|RESIZABLE)
 camera = camera.Camera()
 
 eventd.create_event_type("screen size")
-
 spaceship = spaceship.Spaceship("/simple")
+
 front_fps = pygame.font.SysFont('Comic Sans MS', 30)
 
 background = background.Background()

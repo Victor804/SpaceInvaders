@@ -15,15 +15,17 @@ class Spaceship:
 		self.animation_time = eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/animationTime")[0].text)
 		self.animation_counter = 0
 		self.proportion_on_screen = 1/eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/proportionOnScreen")[0].text)
+		self.list_original_pictures = self.load_pictures()
 		self.list_pictures = self.load_pictures()
 
 		self._events_registers()
 
 
 	def _events_registers(self):
-		eventd.register("screen size", self.load_pictures)
+		eventd.register("screen size", self.resize_pictures)
 		eventd.register("camera move", self.camera_move)
 		eventd.register("zoom", self.camera_zoom)
+
 
 	def load_pictures(self):
 		"""
@@ -34,11 +36,18 @@ class Spaceship:
 		list_pictures = list()
 		for file in os.listdir(self.directory+"/animation"):
 			picture = pygame.image.load("{}/animation/{}".format(self.directory, file)).convert_alpha()
+			list_pictures.append(picture)
+		self.list_original_pictures = list_pictures
+		return list_pictures
+
+
+	def resize_pictures(self):
+		list_pictures = list()
+		for picture in self.list_original_pictures:
 			size = (int(pygame.display.get_surface().get_size()[0]*self.proportion_on_screen), int(pygame.display.get_surface().get_size()[1]*self.proportion_on_screen))
 			picture = pygame.transform.scale(picture, size)
 			list_pictures.append(picture)
 		self.list_pictures = list_pictures
-		return list_pictures
 
 
 	def moveBy(self, horizontal, vertical):
@@ -76,4 +85,4 @@ class Spaceship:
 	def camera_zoom(self, zoom):
 		self.speed*=zoom
 		self.proportion_on_screen*=zoom
-		self.load_pictures()
+		self.resize_pictures()
