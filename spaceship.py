@@ -16,7 +16,7 @@ class Spaceship:
 		self.animation_counter = 0
 		self.proportion_on_screen = 1/eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/proportionOnScreen")[0].text)
 		self.list_original_pictures = self.load_pictures()
-		self.list_pictures = self.load_pictures()
+		self.list_pictures = self.resize_pictures()
 
 		self._events_registers()
 
@@ -48,6 +48,7 @@ class Spaceship:
 			picture = pygame.transform.scale(picture, size)
 			list_pictures.append(picture)
 		self.list_pictures = list_pictures
+		return list_pictures
 
 
 	def moveBy(self, horizontal, vertical):
