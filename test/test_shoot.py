@@ -43,11 +43,15 @@ while True:
             if event.key==K_q:
                 camera.moveBy(-1, 0)
         if event.type==MOUSEBUTTONDOWN:
+            if event.button==1:
+                spaceship.bullet.shoot()
+
             if event.button==4:
                 camera.zoom()
 
             elif event.button==5:
                 camera.zoom(False)
+
 
     background.animation(screen, round(clock.get_fps()))
     spaceship.animation(screen, round(clock.get_fps()))
@@ -56,5 +60,3 @@ while True:
     screen.blit(render_fps,(0,0))
 
     pygame.display.update()
-
-    #spaceship.moveBy(1, 0)

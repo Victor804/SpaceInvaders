@@ -4,7 +4,7 @@ import eventd
 class Camera:
     def __init__(self, pos=(0,0)):
         self.pos = pos
-        self.zoom_speed = 2
+        self.zoom_speed = 1.1
         self.speed = 15
 
         eventd.create_event_type("camera move")

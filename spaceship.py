@@ -7,8 +7,10 @@ class Spaceship:
 	def __init__(self, directory, pos=(0,0)):
 		self.directory = "{}/spaceships{}".format(sys.path[0], directory)
 		self.name = etree.parse(self.directory+"/model.xml").xpath("/spaceship/name")[0].text
+
 		self.pos = pos
 		self.pos_pictures = pos
+
 		self.life = eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/life")[0].text)
 		self.speed = eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/speed")[0].text)
 
@@ -17,6 +19,10 @@ class Spaceship:
 		self.proportion_on_screen = 1/eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/proportionOnScreen")[0].text)
 		self.list_original_pictures = self.load_pictures()
 		self.list_pictures = self.resize_pictures()
+
+		self.originx = 0
+		self.originy = 0
+		self.bullet = Bullet(self)
 
 		self._events_registers()
 
@@ -84,6 +90,30 @@ class Spaceship:
 		self.pos_pictures = (self.pos_pictures[0]-pos[0], self.pos_pictures[1]-pos[1])
 
 	def camera_zoom(self, zoom):
+		mousex, mousey = pygame.mouse.get_pos()
+		#Changement de base du vaisseau(en fonction de la position de la souris)
+		pos_spaceship = (self.pos_pictures[0]-mousex, self.pos_pictures[1]-mousey)
+
+		#Application du zoom a la postion
+		pos_spaceship = (round(pos_spaceship[0]*zoom), round(pos_spaceship[1]*zoom))
+
+		#On replace dans la base d'origine
+		pos_spaceship = (pos_spaceship[0]+mousex, pos_spaceship[1]+mousey)
+		self.pos_pictures = pos_spaceship
 		self.speed*=zoom
 		self.proportion_on_screen*=zoom
 		self.resize_pictures()
+
+
+
+
+class Bullet:
+	def __init__(self, spaceship):
+		self.directory = spaceship.directory
+
+		self.type = etree.parse(self.directory+"/model.xml").xpath("/spaceship/bullet/type")[0].text
+		self.damage = eval(etree.parse(self.directory+"/model.xml").xpath("/spaceship/bullet/damage")[0].text)
+
+	def shoot(self):
+		if self.type == "default":
+			pass
