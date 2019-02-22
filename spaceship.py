@@ -91,15 +91,7 @@ class Spaceship:
 
 	def camera_zoom(self, zoom):
 		mousex, mousey = pygame.mouse.get_pos()
-		#Changement de base du vaisseau(en fonction de la position de la souris)
-		pos_spaceship = (self.pos_pictures[0]-mousex, self.pos_pictures[1]-mousey)
-
-		#Application du zoom a la postion
-		pos_spaceship = (round(pos_spaceship[0]*zoom), round(pos_spaceship[1]*zoom))
-
-		#On replace dans la base d'origine
-		pos_spaceship = (pos_spaceship[0]+mousex, pos_spaceship[1]+mousey)
-		self.pos_pictures = pos_spaceship
+		self.pos_pictures = (round((self.pos_pictures[0]-mousex)*zoom)+mousex, round((self.pos_pictures[1]-mousey)*zoom)+mousey)
 		self.speed*=zoom
 		self.proportion_on_screen*=zoom
 		self.resize_pictures()
