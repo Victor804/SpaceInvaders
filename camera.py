@@ -6,6 +6,7 @@ class Camera:
         self.pos = pos
         self.zoom_speed = 1.1
         self.speed = 15
+        self.mode = None
 
         eventd.create_event_type("camera move")
         eventd.create_event_type("zoom")
@@ -36,3 +37,19 @@ class Camera:
             eventd.send_event("zoom", self.zoom_speed)
         else:
             eventd.send_event("zoom", 1/self.zoom_speed)
+
+    def follow(self, object):
+        """
+        Permet de suivre un objet
+        """
+        self.mode = ("follow", object)
+        self.moveTo(object.pos[0]-pygame.display.get_surface().get_size()[0]//2, object.pos[1]-pygame.display.get_surface().get_size()[1]//2)
+
+
+    def update(self):
+        """
+        Mise a jours des evenements 'cycliques'
+        """
+        if self.mode is not None:
+            if self.mode[0] == "follow":
+                self.follow(self.mode[1])
