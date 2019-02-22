@@ -13,12 +13,19 @@ class Background:
         self.animation_time = eval(etree.parse(self.directory+"/model.xml").xpath("/background/animationTime")[0].text)
         self.animation_counter = 0
 
+        self.fps = 0
+
         self.list_pictures = self.load_pictures()
         self._events_registers()
 
 
     def _events_registers(self):
         eventd.register("screen size", self.load_pictures)
+        eventd.register("fps", self.save_fps)
+
+
+    def save_fps(self, fps):
+        self.fps = fps
 
 
     def load_pictures(self):
@@ -37,20 +44,20 @@ class Background:
         return list_pictures
 
 
-    def animation(self, screen, fps):
+    def animation(self, screen):
         """
         Affiche le fond d'ecran en fonction de l'animation
 
         Entree: Ecran, fps
         """
         self.animation_counter+=1
-        fps = fps if fps != 0 else 0.1
-        if self.animation_counter/fps >= self.animation_time:
+        self.fps = self.fps if self.fps != 0 else 0.1
+        if self.animation_counter/self.fps >= self.animation_time:
             screen.blit(self.list_pictures[-1], self.pos)
             self.animation_counter = 0
 
         else:
             for i in range(1, len(self.list_pictures)+1):
                 t = self.animation_time/len(self.list_pictures)
-                if t*(i-1) <= self.animation_counter/fps and self.animation_counter/fps < t*i:
+                if t*(i-1) <= self.animation_counter/self.fps and self.animation_counter/self.fps < t*i:
                     screen.blit(self.list_pictures[i-1], self.pos)

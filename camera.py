@@ -29,6 +29,7 @@ class Camera:
         self.pos = (self.pos[0]+horizontal*self.speed, self.pos[-1]+vertical*self.speed)
         eventd.send_event("camera move", (horizontal*self.speed, self.speed*vertical))
 
+
     def zoom(self, direction=True):
         """
         Entree: direction(True, False)
@@ -37,6 +38,7 @@ class Camera:
             eventd.send_event("zoom", self.zoom_speed)
         else:
             eventd.send_event("zoom", 1/self.zoom_speed)
+
 
     def follow(self, object):
         """

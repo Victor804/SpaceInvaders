@@ -20,8 +20,8 @@ class Spaceship:
 		self.list_original_pictures = self.load_pictures()
 		self.list_pictures = self.resize_pictures()
 
-		self.originx = 0
-		self.originy = 0
+		self.fps = 0
+
 		self.bullet = Bullet(self)
 
 		self._events_registers()
@@ -31,6 +31,10 @@ class Spaceship:
 		eventd.register("screen size", self.resize_pictures)
 		eventd.register("camera move", self.camera_move)
 		eventd.register("zoom", self.camera_zoom)
+		eventd.register("fps", self.save_fps)
+
+	def save_fps(self, fps):
+		self.fps = fps
 
 
 	def load_pictures(self):
@@ -63,31 +67,32 @@ class Spaceship:
 
 		Entree: vertical(-1, 0 ou 1), horizontal(-1, 0 ou -1)
 		"""
-		self.pos = (self.pos[0]+self.speed*horizontal, self.pos[1]+self.speed*vertical)
-		self.pos_pictures = (self.pos_pictures[0]+self.speed*horizontal, self.pos_pictures[1]+self.speed*vertical)
+		self.pos = (self.pos[0]+self.speed*horizontal*60/self.fps, self.pos[1]+self.speed*vertical*60/self.fps)
+		self.pos_pictures = (self.pos_pictures[0]+self.speed*horizontal*60/self.fps, self.pos_pictures[1]+self.speed*vertical*60/self.fps)
 
 
-	def animation(self, screen, fps):
+	def animation(self, screen):
 		"""
 		Affiche le vaisseau sur l'ecran en fonction de l'animation
 
 		Entree: Ecran, fps
 		"""
 		self.animation_counter+=1
-		fps = fps if fps != 0 else 0.1
-		if self.animation_counter/fps >= self.animation_time:
+		self.fps = self.fps if self.fps != 0 else 0.1
+		if self.animation_counter/self.fps >= self.animation_time:
 			screen.blit(self.list_pictures[-1], self.pos_pictures)
 			self.animation_counter = 0
 
 		else:
 			for i in range(1, len(self.list_pictures)+1):
 				t = self.animation_time/len(self.list_pictures)
-				if t*(i-1) <= self.animation_counter/fps and self.animation_counter/fps < t*i:
+				if t*(i-1) <= self.animation_counter/self.fps and self.animation_counter/self.fps < t*i:
 					screen.blit(self.list_pictures[i-1], self.pos_pictures)
 
 
 	def camera_move(self, pos):
 		self.pos_pictures = (self.pos_pictures[0]-pos[0], self.pos_pictures[1]-pos[1])
+
 
 	def camera_zoom(self, zoom):
 		mousex, mousey = pygame.mouse.get_pos()
