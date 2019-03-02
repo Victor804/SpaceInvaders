@@ -12,19 +12,20 @@ class Background:
 
         self.animation_time = eval(etree.parse(self.directory+"/model.xml").xpath("/background/animationTime")[0].text)
         self.animation_counter = 0
+        self.list_original_pictures = self.load_pictures()
+        self.list_pictures = self.resize_pictures()
 
         self.fps = 0
 
-        self.list_pictures = self.load_pictures()
         self._events_registers()
 
 
     def _events_registers(self):
-        eventd.register("screen size", self.load_pictures)
-        eventd.register("fps", self.save_fps)
+        eventd.register("screen size", self._screen_resize)
+        eventd.register("fps", self._save_fps)
 
 
-    def save_fps(self, fps):
+    def _save_fps(self, fps):
         self.fps = fps
 
 
@@ -35,10 +36,17 @@ class Background:
         Sortie: Liste des surfaces des images dans une liste
         """
         list_pictures = list()
-        for file in os.listdir("{}/animation".format(self.directory)):
-            picture = pygame.image.load("{}/animation/{}".format(self.directory, file)).convert()
-            size = (int(pygame.display.get_surface().get_size()[0]), int(pygame.display.get_surface().get_size()[1]))
-            picture = pygame.transform.scale(picture, size)
+        for file in os.listdir(self.directory+"/animation"):
+            picture = pygame.image.load("{}/animation/{}".format(self.directory, file)).convert_alpha()
+            list_pictures.append(picture)
+        self.list_original_pictures = list_pictures
+        return list_pictures
+
+
+    def resize_pictures(self):
+        list_pictures = list()
+        for picture in self.list_original_pictures:
+            picture = pygame.transform.scale(picture, pygame.display.get_surface().get_size())
             list_pictures.append(picture)
         self.list_pictures = list_pictures
         return list_pictures
@@ -61,3 +69,7 @@ class Background:
                 t = self.animation_time/len(self.list_pictures)
                 if t*(i-1) <= self.animation_counter/self.fps and self.animation_counter/self.fps < t*i:
                     screen.blit(self.list_pictures[i-1], self.pos)
+
+
+    def _screen_resize(self, old_sreen_size):
+        self.resize_pictures()

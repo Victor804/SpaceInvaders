@@ -28,12 +28,12 @@ class Spaceship:
 
 
 	def _events_registers(self):
-		eventd.register("screen size", self.resize_pictures)
-		eventd.register("camera move", self.camera_move)
-		eventd.register("zoom", self.camera_zoom)
-		eventd.register("fps", self.save_fps)
+		eventd.register("screen size", self._screen_resize)
+		eventd.register("camera move", self._camera_move)
+		eventd.register("zoom", self._camera_zoom)
+		eventd.register("fps", self._save_fps)
 
-	def save_fps(self, fps):
+	def _save_fps(self, fps):
 		self.fps = fps
 
 
@@ -90,17 +90,22 @@ class Spaceship:
 					screen.blit(self.list_pictures[i-1], self.pos_pictures)
 
 
-	def camera_move(self, pos):
+	def _camera_move(self, pos):
 		self.pos_pictures = (self.pos_pictures[0]-pos[0], self.pos_pictures[1]-pos[1])
 
 
-	def camera_zoom(self, zoom):
+	def _camera_zoom(self, zoom):
 		mousex, mousey = pygame.mouse.get_pos()
 		self.pos_pictures = (round((self.pos_pictures[0]-mousex)*zoom)+mousex, round((self.pos_pictures[1]-mousey)*zoom)+mousey)
 		self.speed*=zoom
 		self.proportion_on_screen*=zoom
 		self.resize_pictures()
 
+	def _screen_resize(self, old_sreen_size):
+		self.resize_pictures()
+		self.pos_pictures = (self.pos_pictures[0]*pygame.display.get_surface().get_size()[0]/old_sreen_size[0],
+							 self.pos_pictures[1]*pygame.display.get_surface().get_size()[1]/old_sreen_size[1])
+		self.speed*=pygame.display.get_surface().get_size()[0]/old_sreen_size[0]
 
 
 

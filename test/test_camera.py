@@ -25,13 +25,14 @@ clock = pygame.time.Clock()
 pygame.display.flip()
 
 while True:
-    clock.tick(120)
+    clock.tick(60)
     for event in pygame.event.get():
         if event.type==QUIT: pygame.display.quit()
 
         if event.type==VIDEORESIZE:
+            screen_size = pygame.display.get_surface().get_size()
             screen=pygame.display.set_mode(event.dict['size'],HWSURFACE|DOUBLEBUF|RESIZABLE)
-            eventd.send_event("screen size")
+            eventd.send_event("screen size", screen_size)
         if event.type==MOUSEBUTTONDOWN:
             if event.button==4:
                 camera.zoom()
